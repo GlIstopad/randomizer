@@ -26,22 +26,13 @@ public class Randomizer{
     public void generateRandomWords(){
         String[] randomWords = new String[_numberOfRandomWords];
         String letters = "";
-        for(int i = 0; i<_numberOfRandomWords; i++){
-            char currLetter;
-            _indexesOfRandomWords[i] = random.nextInt(0,_baseWords.length - 1);
-            currLetter = _baseWords[_indexesOfRandomWords[i]].charAt(_key);
-
-            while(letters.contains(new StringBuffer().append(currLetter))){
-                _indexesOfRandomWords[i] = random.nextInt(0,_baseWords.length - 1);
-                currLetter = _baseWords[_indexesOfRandomWords[i]].charAt(_key);
-                System.out.println(currLetter);
+        keyGenerator();
+        for(int i = 0; i < _numberOfRandomWords; i++){
+            randomWords[i] =  _baseWords[random.nextInt(_baseWords.length)];
+            while(!validator(randomWords[i], letters)){
+                randomWords[i] = _baseWords[random.nextInt(_baseWords.length)];
             }
-            letters = letters + currLetter;
-            System.out.println(letters);
-
-        }
-        for(int i = 0; i<_numberOfRandomWords; i++){
-            randomWords[i] = _baseWords[_indexesOfRandomWords[i]]; 
+            letters += randomWords[i].charAt(_key);
         }
         _randomWords = randomWords;
         System.out.println("Generated Random Words: " + Arrays.toString(_randomWords));
@@ -57,6 +48,15 @@ public class Randomizer{
             }
         }
         return minLength;
+    }
+    public boolean validator(String word, String letters){
+        boolean valid = true;
+        for(int i = 0; i < letters.length(); i++){
+            if(word.charAt(_key) == letters.charAt(i)){
+                valid = false;
+            }
+        }
+        return valid;
     }
     public void encryptLetters(){
         _randomChars = new char[_numberOfRandomWords];
